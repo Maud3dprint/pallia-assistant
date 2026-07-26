@@ -1,0 +1,60 @@
+{
+  "name": "Palia Assistant",
+  "short_name": "Palia",
+  "description": "Ton compagnon pour progresser dans Palia : jardin, pêche, insectes, chasse, élevage, recettes, habitants et calendrier.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "/palia-assistant/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#F6F2FD",
+  "theme_color": "#7B4DE0",
+  "categories": ["games", "utilities", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Notifications",
+      "short_name": "Notifs",
+      "description": "Ce qui t'attend maintenant dans le jeu",
+      "url": "./index.html?onglet=notifications",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mon jardin",
+      "short_name": "Jardin",
+      "description": "Ton terrain et le calcul des récoltes",
+      "url": "./index.html?onglet=jardin",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mon calendrier",
+      "short_name": "Calendrier",
+      "description": "Enregistrer ta journée de jeu",
+      "url": "./index.html?onglet=calendrier",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
