@@ -4008,5 +4008,19 @@ function estInstallee(){
   if(p&&VUES[p]){vue=p;setTimeout(()=>rendre(),0);}
 })();
 </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then(registration => {
+        console.log("Service Worker enregistré :", registration.scope);
+      })
+      .catch(error => {
+        console.error("Erreur Service Worker :", error);
+      });
+  });
+}
+</script>
 </body>
 </html>
