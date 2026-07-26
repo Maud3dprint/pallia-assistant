@@ -32,6 +32,11 @@
   --rose:#E8467C;--vert:#2FB58A;--or:#F0A62F;--bleu:#3A9BE0;--rouge:#E0503A;
   --ombre:0 3px 16px rgba(70,30,140,.07);--r:22px;}
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+.g>*{min-width:0}
+.vue{min-width:0}
+img,svg,table,input,textarea,select{max-width:100%}
+.detail{min-width:0}
 body{font-family:'Nunito',system-ui,sans-serif;background:var(--fond);color:var(--encre);-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4,.num{font-family:'Fredoka','Nunito',sans-serif;font-weight:600}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -144,6 +149,18 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .btn-img{border-color:var(--vclair);color:var(--violet);background:#FBF8FF}
 .btn-img:hover{border-color:var(--violet)}
 .btn-img b{font-family:'Fredoka';font-weight:600}
+.bete{background:var(--fond);box-shadow:none;border:2px solid var(--trait)}
+.bete.retr{opacity:.62}
+.champ-l{margin-bottom:12px}
+.champ-l label{display:block;font-size:11.5px;font-weight:800;color:var(--doux);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.bascule{display:inline-flex;align-items:center;gap:7px}
+.grosbouton{width:100%;padding:15px 10px;border-radius:18px;background:var(--violet);color:#fff;
+  font-weight:800;font-size:13.5px;line-height:1.3;box-shadow:0 4px 12px rgba(123,77,224,.25)}
+.grosbouton:hover{filter:brightness(1.07)}
+.grosbouton.fait{background:var(--trait);color:var(--pale);box-shadow:none;cursor:default}
+.quand-b{font-size:11.5px;font-weight:800;color:var(--doux);margin-top:6px}
+.pointille{width:100%;border-style:dashed;color:var(--violet);border-color:var(--violet)}
 .bloc-f{padding:12px 0;border-bottom:1px solid var(--trait)}
 .bloc-f .tt-f{font-size:12px;font-weight:800;color:var(--doux);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
 .bloc-f p{font-size:14px;font-weight:600;line-height:1.6}
@@ -257,6 +274,12 @@ body.sans-ia .ia-only{display:none!important}
 .etat.now{background:#E6F8F1;color:var(--vert)}.etat.soon{background:#FFF3E2;color:var(--or)}.etat.later{background:var(--fond);color:var(--pale)}
 .rar{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:99px;color:#fff}
 .detail{display:grid;gap:16px;grid-template-columns:minmax(250px,350px) 1fr;margin-bottom:20px}
+.duo{grid-template-columns:minmax(280px,1fr) minmax(260px,360px)}
+.duo-inv{grid-template-columns:1fr 296px}
+@media(max-width:1100px){
+  .detail,.duo,.duo-inv{grid-template-columns:1fr!important}
+  .jardin{grid-template-columns:1fr!important}
+}
 .info{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--trait);font-size:14px;font-weight:700}
 .info:last-child{border:0}.info span:first-child{color:var(--doux)}
 .fiche{font-size:14.5px;line-height:1.68;font-weight:600;white-space:pre-wrap}.fiche b{color:var(--violet)}
@@ -380,7 +403,7 @@ body.sans-ia .ia-only{display:none!important}
 .bilan .l .barre{flex:1}.bilan .l em{font-style:normal;width:38px;text-align:right;color:var(--doux)}
 .pastille{width:11px;height:11px;border-radius:9px;flex:none}
 @media(max-width:1180px){.jardin{grid-template-columns:180px 1fr}.jardin .bilan{grid-column:1/-1}}
-@media(max-width:920px){
+@media(max-width:1100px){
   .rail{inset:auto 0 0 0;width:auto;height:auto;min-height:68px;flex-direction:row;
     padding:5px 4px calc(5px + env(safe-area-inset-bottom,0px));border:0;border-top:1px solid var(--trait);gap:0;overflow-x:auto}
   @supports(padding:env(safe-area-inset-top)){.rail{padding-top:5px}}
@@ -398,6 +421,7 @@ body.sans-ia .ia-only{display:none!important}
 <body>
 <div class="app"><nav class="rail" id="rail"></nav><main class="vue" id="vue"></main></div>
 <datalist id="tousobjets"></datalist>
+<datalist id="traits-connus"></datalist>
 <input type="file" id="fichier" accept="image/*" style="display:none">
 <script>
 /* ============================================================
@@ -762,7 +786,7 @@ function vierge(){
     cal:{},parc:{},
     jrd:{onglet:'terrain',mode:'auto',baseEtoile:5,stock:{},engrais:{},prixEngrais:100,pieces:0,ventes:[],
          simu:{c:'tomate',nb:9,star:30,eng:0,dest:'vendre',boostR:false,boostV:false}},
-    res:{},resSup:[],meub:{},meubSup:[],out:{},outSup:[],limites:{aut:0,pla:0},stockOut:{},habSup:[],animSup:[],cultSup:[],gSup:{poissons:[],insectes:[],chasse:[]}};
+    res:{},resSup:[],meub:{},meubSup:[],out:{},outSup:[],limites:{aut:0,pla:0},stockOut:{},colEus:{},stockMeub:{},betes:[],habSup:[],animSup:[],cultSup:[],gSup:{poissons:[],insectes:[],chasse:[]}};
   SKILLS.forEach(k=>s.skills[k.id]=1);
   HABITANTS.forEach(h=>s.hab[h.n]=habVide(h));
   ANIMAUX.forEach(a=>s.ranch[a.n]={nb:0,caresse:0,nourri:''});
@@ -786,6 +810,10 @@ async function charger(){
   if(!S.res)S.res={};
   if(!S.meub)S.meub={};
   if(!S.out)S.out={};
+  if(!Array.isArray(S.betes))S.betes=[];
+  if(!S.colEus)S.colEus={};
+  if(!S.stockMeub)S.stockMeub={};
+  if(!S.compo)S.compo={};
   if(!S.limites)S.limites={aut:0,pla:0};
   if(!S.stockOut)S.stockOut={};
   if(!Array.isArray(S.outSup))S.outSup=[];
@@ -902,7 +930,8 @@ function teteAnimal(a,taille){
 /* --- Recettes --- */
 function toutesRec(){return RECETTES.concat((S&&S.recSup?S.recSup:[]).map(r=>[r.fr,r.en,r.st,r.pas||1,r.xp||0,r.foc||0,r.prix||0,r.rar||'C',1]));}
 function lireRec(i){const r=toutesRec()[i];
-  return{i,fr:r[0],en:r[1],st:r[2],pas:r[3],xp:r[4],foc:r[5],prix:r[6],rar:r[7],perso:!!r[8],ing:S.ing[r[1]]||null};}
+  return{i,fr:r[0],en:r[1],st:r[2],pas:r[3],xp:r[4],foc:r[5],prix:r[6],rar:r[7],perso:!!r[8],
+    ing:(S.compo&&S.compo['rec:'+r[1]])||null};}
 function etatRecette(r){
   if(!r.ing||!r.ing.length)return{code:'?',txt:'Ingrédients inconnus',manque:[]};
   const manque=r.ing.filter(x=>(S.inv[x.n]||0)<x.q);
@@ -966,13 +995,13 @@ function notifications(){
         txt:'Tes plantes doivent être arrosées avant 6:00 en jeu, sinon la journée est perdue.',quand:'Il te reste '+dureeTxt(r),go:'jardin',action:'arrose'});}}
   /* Ranch */
   const jp=jourPalia();
-  const aCaresser=ANIMAUX.filter(a=>S.ranch[a.n].nb>0&&Date.now()-S.ranch[a.n].caresse>=COOLDOWN_CARESSE);
-  if(aCaresser.length)N.push({t:'ok',ic:'🤲',titre:'Tes animaux veulent des câlins',
-    txt:`${aCaresser.map(a=>a.n).join(', ')} : les caresses ne comptent qu'une fois toutes les 17 heures réelles, ne les rate pas.`,
-    quand:aCaresser.length+' espèce'+(aCaresser.length>1?'s':''),go:'elevage'});
-  const aNourrir=ANIMAUX.filter(a=>S.ranch[a.n].nb>0&&S.ranch[a.n].nourri!==jp);
-  if(aNourrir.length)N.push({t:'',ic:'🌽',titre:'Nourris tes animaux',
-    txt:`${aNourrir.map(a=>a.n).join(', ')} n'${aNourrir.length>1?'ont':'a'} pas encore mangé aujourd'hui. Sans Concentration, la production ralentit.`,
+  const bc=mesBetes().filter(beteAcaresser);
+  if(bc.length)N.push({t:'ok',ic:'🤲',titre:'Tes animaux veulent des câlins',
+    txt:`${bc.map(b=>b.nom||b.esp).slice(0,5).join(', ')}${bc.length>5?' et '+(bc.length-5)+' autres':''} : les caresses ne comptent qu'une fois toutes les 17 heures réelles.`,
+    quand:bc.length+(bc.length>1?' animaux':' animal'),go:'elevage'});
+  const bn=mesBetes().filter(beteAnourrir);
+  if(bn.length)N.push({t:'',ic:'🌽',titre:'Nourris tes animaux',
+    txt:`${bn.map(b=>b.nom||b.esp).slice(0,5).join(', ')}${bn.length>5?' et '+(bn.length-5)+' autres':''} n'${bn.length>1?'ont':'a'} pas encore mangé aujourd'hui.`,
     quand:'Remis à zéro à 3:00 en jeu',go:'elevage'});
   ['poissons','insectes','chasse'].forEach(t=>{
     listeGuide(t).filter(e=>S.fav[cleE(t,e)]&&!S.pris[cleE(t,e)]).forEach(e=>{
@@ -990,7 +1019,7 @@ function notifications(){
   if(ap.length)N.push({t:'info',ic:'💬',titre:'Parle-leur aujourd\'hui',
     txt:`${ap.length} habitant${ap.length>1?'s que tu connais n\'ont':' que tu connais n\'a'} pas encore eu sa discussion du jour.`,
     quand:'Remis à zéro à 3:00 en jeu',go:'habitants'});
-  DEBLOCAGES.forEach(d=>{if(S.skills[d.sk]===d.n-1){const sk=SKILLS.find(x=>x.id===d.sk);
+  DEBLOCAGES.forEach(d=>{if(S.skills[d.sk]>1&&S.skills[d.sk]===d.n-1){const sk=SKILLS.find(x=>x.id===d.sk);
     N.push({t:'info',ic:'🔓',titre:'Tu y es presque',txt:`Encore 1 niveau de ${sk.nom} et tu débloques : ${d.quoi} (chez ${d.qui}).`,quand:`${sk.nom} ${S.skills[d.sk]} → ${d.n}`,go:'progression'});}});
   if(!N.length)N.push({t:'ok',ic:'✨',titre:'Tout est à jour',
     txt:'Rien d\'urgent. Plante quelque chose, mets un poisson en favori, ou fais tourner la roue.',quand:'Bon jeu !',go:'roue'});
@@ -1071,6 +1100,24 @@ function vElevage(){
   </div>
 
   ${barreAjout('anm','anm','Ajouter un animal')}
+  <div class="carte" style="margin-bottom:16px">
+    <div class="ct"><h3>🐾 Mes animaux</h3>
+      <span class="tag">${mesBetes().length} enregistré${mesBetes().length>1?'s':''}</span></div>
+    ${mesBetes().length?`<div class="puces" style="margin-bottom:14px">
+      ${(()=>{const c=mesBetes().filter(beteAcaresser).length,f=mesBetes().filter(beteAnourrir).length;
+        return (c?`<span class="tag" style="background:#FFF0E6;color:#D9622B">🤲 ${c} à câliner</span>`:'')+
+               (f?`<span class="tag" style="background:#FFF3E2;color:var(--or)">🍽️ ${f} à nourrir</span>`:'')+
+               (!c&&!f?`<span class="tag" style="background:#E6F8F1;color:var(--vert)">✓ Tout le monde est content</span>`:'');})()}
+      </div>
+      <div class="g" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">
+        ${mesBetes().map((b,i)=>ficheBete(b,i)).join('')}</div>`
+    :`<div class="vide" style="padding:32px 20px">
+        Tu n'as encore enregistré aucun animal.<br><br>
+        Ajoute-les ici pour recevoir les rappels de câlins et de repas —
+        tant que la liste est vide, aucune notification ne s'affichera.</div>`}
+    <button class="btn" id="add-bete" style="margin-top:14px">＋ Ajouter un animal</button>
+  </div>
+
   ${selAn!=null&&ANIMAUX[selAn]?ficheAnimal(ANIMAUX[selAn]):''}
   <div class="ct"><h3>Les animaux</h3>
     <div style="display:flex;gap:8px;align-items:center">${btnPhotos('anim')}
@@ -1084,7 +1131,7 @@ function vElevage(){
         <h4>${a.n}</h4>
         <div class="pr">${a.prod}</div>
         <div class="dt">${a.cout}${a.note?' · '+a.note:''}</div>
-        <div class="qte" style="margin-top:11px"><button data-ra="-1" data-an="${esc(a.n)}">−</button><b>${r.nb}</b><button data-ra="1" data-an="${esc(a.n)}">+</button></div>
+        <div class="qte" style="margin-top:11px"><button data-ra="-1" data-anom="${esc(a.n)}">−</button><b>${r.nb}</b><button data-ra="1" data-anom="${esc(a.n)}">+</button></div>
         ${r.nb>0?`<div class="cd">
           <button data-caresse="${esc(a.n)}" class="${reste>0?'on':''}" ${reste>0?'disabled':''}>${reste>0?'🤲 '+dureeTxt(Math.ceil(reste/60000)):'🤲 Caresser'}</button>
           <button data-nourri="${esc(a.n)}" class="${r.nourri===jp?'on':''}">${r.nourri===jp?chkV+' Nourri':'🌽 Nourrir'}</button></div>`:''}
@@ -1111,7 +1158,7 @@ function ficheAnimal(a){
       <div style="display:flex;justify-content:center">${teteAnimal(a,110)}</div>
       <h2 style="font-size:24px;margin-top:12px">${esc(a.n)}</h2>
       <div style="font-weight:800;color:var(--vert);font-size:14px;margin-top:2px">${esc(a.prod)}</div>
-      <div class="qte" style="margin-top:14px"><button data-ra="-1" data-an="${esc(a.n)}">−</button><b>${r.nb}</b><button data-ra="1" data-an="${esc(a.n)}">+</button></div>
+      <div class="qte" style="margin-top:14px"><button data-ra="-1" data-anom="${esc(a.n)}">−</button><b>${r.nb}</b><button data-ra="1" data-anom="${esc(a.n)}">+</button></div>
       <div style="font-size:11.5px;font-weight:800;color:var(--doux);margin-top:4px">chez moi</div>
       <div style="margin-top:16px">
         <div class="info"><span>Prix</span><span>${esc(a.cout)}</span></div>
@@ -1425,136 +1472,345 @@ function ficheOutil(o){
         <p style="margin-top:8px">${esc(o.pourquoi)}</p></div>
       <div class="bloc-f" style="border:0"><div class="tt-f">⚠️ À savoir</div><p>${esc(o.limites)}</p></div>`
       :`<div class="bloc-f"><div class="tt-f">📍 Comment l'obtenir</div><p>${esc(o.ou)}</p></div>
-      <div class="bloc-f"><div class="tt-f">🧱 Matériaux</div><p>${esc(o.mats)}</p>
-        ${o.mats&&o.mats!==AV&&o.mats!=='—'?`<div style="margin-top:8px">${o.mats.split(/,\s*/).map(x=>lienMat(x.split('×')[0].trim())).join('')}</div>`:''}</div>
+      ${o.mats&&o.mats!==AV&&o.mats!=='—'?`<div class="bloc-f"><div class="tt-f">📗 Indication du jeu</div><p>${esc(o.mats)}</p></div>`:''}
+      ${editeurCompo('out:'+o.nom,'🧱 Matériaux','Nom du matériau')}
       ${o.trans&&o.trans!=='—'?`<div class="bloc-f" style="border:0"><div class="tt-f">⚙️ Ce qu'elle transforme</div><p>${esc(o.trans)}</p></div>`:''}`}
     </div></div>`;}
 
 
 /* ============================================================
-   ██ MEUBLES
+   ██ MEUBLES ET DÉCORATIONS
+   Liste des 45 ensembles vérifiée sur le wiki officiel (page Decor).
+   Les chiffres par ensemble ne sont renseignés que lorsqu'ils
+   ont été vérifiés : « ? » signifie « à compléter », jamais inventé.
    ============================================================ */
-const COLLECTIONS=[
- {n:'Homestead',niv:2,pnj:'Tish',pieces:57,mat:'Aubier, céramique, cuivre',
-  d:'Set simple et chaleureux, débloqué à Meubles 2 chez Tish. Bois travaillé, céramique artisanale et tissus aux tons terreux. 4 tapis, 8 luminaires, et même une glacière. 8 pièces supplémentaires se vendent uniquement dans le Souterrain.'},
- {n:'Aubier',niv:1,pnj:'Tish',pieces:0,mat:'Bois d\'aubier',
-  d:'Les toutes premières recettes, en bois clair. Idéales pour monter la compétence sans dépenser.'},
- {n:'Pierre',niv:3,pnj:'Tish',pieces:0,mat:'Briques de pierre',
-  d:'Set robuste en pierre taillée, pour les extérieurs et les grandes pièces.'},
- {n:'Céramique',niv:4,pnj:'Tish',pieces:0,mat:'Céramique, argile',
-  d:'Vaisselle, pots et petits objets décoratifs.'}];
-const CAT_MEUB=['Sièges','Tables','Rangement','Lits','Luminaires','Tapis','Murs','Extérieur','Ateliers','Autres'];
-const MEUBLES=[
- // [nom, collection, catégorie, taille, comment l'obtenir, achetable, prix, ressources, établi, niveau, plan chez]
- ['Établi','Base','Ateliers','2×2','Offert au début du jeu par Tish.',0,0,'—','—',1,'Tish'],
- ['Scierie basique','Base','Ateliers','2×2','Recette chez Ashura à Cueillette 2.',0,0,'Bois d\'aubier, pierre','Établi',1,'Ashura'],
- ['Scierie lourde','Base','Ateliers','2×2','Recette chez Ashura à Cueillette 5.',0,0,'Bois de cœur, barre de fer','Établi',3,'Ashura'],
- ['Fonderie basique','Base','Ateliers','2×2','Recette chez Hodari à Minage 2.',0,0,'Pierre, argile','Établi',1,'Hodari'],
- ['Fonderie lourde','Base','Ateliers','2×2','Recette chez Hodari à Minage 5.',0,0,'Brique de pierre, barre de fer','Établi',3,'Hodari'],
- ['Four de verrier','Base','Ateliers','2×2','Recette chez Tish, plus tard dans la progression.',0,0,'Brique de pierre, barre de cuivre','Établi',4,'Tish'],
- ['Métier à tisser','Base','Ateliers','2×2','Recette chez Tish, plus tard dans la progression.',0,0,'Planche d\'aubier, fibre végétale','Établi',4,'Tish'],
- ['Station de mélange','Base','Ateliers','1×2','Recette chez Reth à Cuisine 3.',0,0,'Planche d\'aubier, céramique','Établi',2,'Reth'],
- ['Cuisinière standard','Base','Ateliers','2×1','Recette chez Reth à Cuisine 2.',0,0,'Brique de pierre, barre de cuivre','Établi',2,'Reth'],
- ['Four standard','Base','Ateliers','2×2','Recette chez Reth à Cuisine 4.',0,0,'Brique de pierre, barre de fer','Établi',3,'Reth'],
- ['Ferme à vers','Base','Ateliers','1×2','Recette chez Einar à Pêche 4.',0,0,'Planche d\'aubier, terre','Établi',2,'Einar'],
- ['Cloche de grange','Base','Extérieur','1×1','Recette donnée par Delaila après la quête « Comme un oiseau ».',0,0,'Planche d\'aubier, barre de cuivre','Établi',1,'Delaila'],
- ['Station de réparation','Base','Ateliers','1×2','Disponible à Minage 4 chez Hodari.',0,0,'Brique de pierre, barre de fer','Établi',3,'Hodari']];
+const MOYENS={
+  fab:{n:'Fabrication',e:'🔨',c:'#7A8A9B'}, boutique:{n:'Boutique de meubles',e:'🏪',c:'#3A9BE0'},
+  underground:{n:'Underground',e:'🕯️',c:'#8B7BD8'}, quete:{n:'Récompense de quête',e:'📜',c:'#E8843F'},
+  zeki:{n:'Machine de Zeki',e:'🎰',c:'#F0A62F'}, coffre:{n:'Coffre détrempé',e:'🎣',c:'#2FB58A'},
+  event:{n:'Événement',e:'🎉',c:'#E8467C'}, succes:{n:'Succès',e:'🏆',c:'#D0517A'}, autre:{n:'Autre',e:'📦',c:'#6E5D8E'}};
+const CAT_MEUB=['Lits','Canapés','Fauteuils','Chaises','Bancs','Tables','Bureaux','Bibliothèques','Armoires',
+  'Étagères','Coffres','Rangement','Commodes','Tables de chevet','Cuisine','Salle de bain','Miroirs','Tapis',
+  'Rideaux','Luminaires','Bougies','Tableaux','Décorations murales','Plantes','Pots de fleurs','Fontaines',
+  'Statues','Clôtures','Chemins','Extérieur','Peluches','Trophées','Objets interactifs','Ateliers','Autres'];
 
-function lireMeub(i){const m=MEUBLES.concat(S.meubSup||[])[i];if(!m)return null;
-  return{i,n:m[0],col:m[1],cat:m[2],taille:m[3],ou:m[4],achat:m[5],prix:m[6],ress:m[7],
-    etabli:m[8],niv:m[9],plan:m[10],perso:!!m[11]};}
+// [nom, niveau, pnj, fabricables, underground, zeki, quete, autres, matériaux, description]
+// Un 0 en compteur = valeur non vérifiée
+const COLLECTIONS=[
+ ['Homestead',2,'Tish',57,8,0,0,0,'Aubier, céramique, cuivre',
+  'Set simple et chaleureux : bois travaillé, céramique artisanale, tissus aux tons terreux. Contient 4 tapis, 8 luminaires et une glacière.'],
+ ['Ranch House',3,'Tish',24,5,2,1,0,'Aubier, céramique, cuivre',
+  'Set rustique et campagnard : bois blanc brut, laiton vieilli, tissus orange brûlé. Contient 3 tapis ormuu, 3 peluches ormuu et un pot de fleurs en brouette. Recette de déblocage à 50 g ; les 5 pièces de l\'Underground coûtent 14 100 g, soit 14 150 g au total pour tout avoir.'],
+ ['Capital Chic',5,'Tish',24,0,0,0,0,'?','Set élégant disponible chez Tish à partir du niveau 5, avec plusieurs pièces exclusives à l\'Underground.'],
+ ['Bellflower',7,'Tish',26,0,0,0,0,'?','Disponible à partir du niveau 7, avec plusieurs objets exclusifs à l\'Underground.'],
+ ['Umbraan',0,'Tish',0,0,0,0,0,'?','Nombreuses pièces fabricables, des objets de l\'Underground, et un objet vendu chez Subira dans l\'Elderwood. Le déblocage demande un pack de départ acheté chez Tish.'],
+ ['Kilima',0,'Tish',0,0,0,0,0,'?','Meubles inspirés du village de Kilima. Pièces fabricables et plusieurs objets vendus exclusivement dans l\'Underground.'],
+ ['Makeshift',0,'—',0,0,0,0,0,'?','Provient surtout des coffres détrempés obtenus à la pêche. L\'un des ensembles les plus vastes du jeu, complété par des objets de l\'Underground, de la machine de Zeki et du marché Maji.'],
+ ['Log Cabin',0,'Tish',0,0,0,0,0,'?',''],['Ravenwood',0,'Tish',0,0,0,0,0,'?',''],
+ ['Dragontide',0,'Tish',0,0,0,0,0,'?',''],['Moonstruck',0,'Tish',0,0,0,0,0,'?',''],
+ ['Emberborn',0,'Tish',0,0,0,0,0,'?',''],['Investigator',0,'Tish',0,0,0,0,0,'?',''],
+ ['Industrial',0,'Tish',0,0,0,0,0,'?',''],['Spring Fever',0,'Tish',0,0,0,0,0,'?',''],
+ ['Gourmet',0,'Tish',0,0,0,0,0,'?',''],['PalTech',0,'Tish',0,0,0,0,0,'?',''],
+ ['Grow All Out',0,'Tish',0,0,0,0,0,'?',''],['Elderwood',0,'Tish',0,0,0,0,0,'?',''],
+ ['Estate',0,'Tish',0,0,0,0,0,'?',''],['Greenhome',0,'Tish',0,0,0,0,0,'?',''],
+ ['Lily Rattan',0,'Tish',0,0,0,0,0,'?',''],['Garden Variety',0,'Tish',0,0,0,0,0,'?',''],
+ ['Planterlife',0,'Tish',0,0,0,0,0,'?',''],['Teatime',0,'Tish',0,0,0,0,0,'?',''],
+ ['Honeybunch',0,'Tish',0,0,0,0,0,'?',''],['Valley Sunrise',0,'Tish',0,0,0,0,0,'?',''],
+ ['Summer Stripe',0,'Tish',0,0,0,0,0,'?',''],['Spa Day',0,'Tish',0,0,0,0,0,'?',''],
+ ['Camping',0,'Tish',0,0,0,0,0,'?',''],['Cozy Camp',0,'Tish',0,0,0,0,0,'?',''],
+ ['Chapaa Hut',0,'Tish',0,0,0,0,0,'?',''],['Mermaid',0,'Tish',0,0,0,0,0,'?',''],
+ ['Pirate',0,'Tish',0,0,0,0,0,'?',''],['Flotsam',0,'—',0,0,0,0,0,'?',''],
+ ['Sandbox',0,'Tish',0,0,0,0,0,'?',''],['Palcat',0,'Tish',0,0,0,0,0,'?',''],
+ ['Builder\'s',0,'Tish',0,0,0,0,0,'?',''],['Rancher\'s',0,'Delaila',0,0,0,0,0,'?',''],
+ ['Prismbeard\'s',0,'—',0,0,0,0,0,'?',''],['Maji Market',0,'—',0,0,0,0,0,'?','Objets du marché Maji.'],
+ ['Kilima Rummage Piles',0,'—',0,0,0,0,0,'?','Objets trouvés dans les tas de fouille de Kilima.'],
+ ['Spooky',0,'—',0,0,0,0,0,'?','Ensemble événementiel.'],
+ ['New Year',0,'—',0,0,0,0,0,'?','Ensemble événementiel.'],
+ ['Base',1,'Tish',0,0,0,0,0,'Aubier, pierre','Les ateliers et machines du jeu.']];
+function lireCol(i){const c=COLLECTIONS[i];
+  return{i,n:c[0],niv:c[1],pnj:c[2],fab:c[3],und:c[4],zeki:c[5],quete:c[6],autres:c[7],mat:c[8],d:c[9],
+    total:c[3]+c[4]+c[5]+c[6]+c[7]};}
+const listeCol=()=>COLLECTIONS.map((_,i)=>lireCol(i));
+
+// Pièces individuelles : [nom fr, nom en, ensemble, catégorie, placement, moyen, prix, monnaie, vendeur, niveau, matériaux "nom×q, nom×q", teintures]
+const MEUBLES=[
+ ['Établi','Worktable','Base','Ateliers','Intérieur','quete',0,'—','Tish',1,'—',0],
+ ['Scierie basique','Basic Sawmill','Base','Ateliers','Extérieur','fab',0,'Or','Ashura',2,'Bois d\'aubier×?, Pierre×?',0],
+ ['Scierie lourde','Heavy Sawmill','Base','Ateliers','Extérieur','fab',0,'Or','Ashura',5,'Bois de cœur×?, Barre de fer×?',0],
+ ['Fonderie basique','Basic Smelter','Base','Ateliers','Extérieur','fab',0,'Or','Hodari',2,'Pierre×?, Argile×?',0],
+ ['Fonderie lourde','Heavy Smelter','Base','Ateliers','Extérieur','fab',0,'Or','Hodari',5,'Brique de pierre×?, Barre de fer×?',0],
+ ['Four de verrier','Glass Furnace','Base','Ateliers','Extérieur','fab',0,'Or','Tish',4,'Brique de pierre×?, Barre de cuivre×?',0],
+ ['Métier à tisser','Fabric Loom','Base','Ateliers','Intérieur','fab',0,'Or','Tish',4,'Planche d\'aubier×?, Fibre végétale×?',0],
+ ['Machine à graines','Seed Collector','Base','Ateliers','Extérieur','fab',0,'Or','Badruu',3,'Planche d\'aubier×?, Barre de cuivre×?',0],
+ ['Machine à conserves','Preservation Jar','Base','Ateliers','Extérieur','fab',0,'Or','Badruu',3,'Planche d\'aubier×?, Céramique×?',0],
+ ['Cuisinière standard','Standard Stove','Base','Cuisine','Intérieur','fab',0,'Or','Reth',2,'Brique de pierre×?, Barre de cuivre×?',0],
+ ['Four standard','Standard Oven','Base','Cuisine','Intérieur','fab',0,'Or','Reth',4,'Brique de pierre×?, Barre de fer×?',0],
+ ['Cloche de grange','Barn Bell','Base','Objets interactifs','Extérieur','quete',0,'—','Delaila',1,'Planche d\'aubier×?, Barre de cuivre×?',0]];
+function lireMeub(i){const t=MEUBLES.concat(S.meubSup||[])[i];if(!t)return null;
+  return{i,fr:t[0],en:t[1],set:t[2],cat:t[3],place:t[4],moyen:t[5],prix:t[6],monnaie:t[7],
+    vendeur:t[8],niv:t[9],mats:t[10],teintes:t[11],perso:!!t[12]};}
 const listeMeub=()=>MEUBLES.concat(S.meubSup||[]).map((_,i)=>lireMeub(i));
 
-let selMeub=null,fColMeub='tous',fCatMeub='tous',rechMeub='';
+const AGES=['Bébé','Jeune','Adulte','Ancien'];
+const ENCLOS=['Pépinière','Grange','Enclos extérieur','Écurie'];
+const TRAITS_CONNUS=['Truffletouille','Oiseau de proie','Beepressed','Masque de bandit','Chaussettes',
+  'Toundra neigeuse','Baie sauvage','Fleur sur la tête','Croissance rapide','Grand producteur'];
+
+function mesBetes(){return S.betes||(S.betes=[]);}
+function beteVierge(esp){return{id:'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+  esp:esp||ANIMAUX[0].n,nom:'',age:'Bébé',enclos:'Pépinière',caresse:0,nourri:0,
+  traits:[''],donner:false,retraite:false};}
+function jamaisDepuis(t){
+  if(!t)return'Jamais';
+  const m=Math.floor((Date.now()-t)/60000);
+  if(m<1)return'À l\'instant';
+  if(m<60)return'Il y a '+m+' min';
+  const h=Math.floor(m/60);
+  return h<24?'Il y a '+h+' h':'Il y a '+Math.floor(h/24)+' j';}
+function beteAcaresser(b){return !b.retraite && Date.now()-b.caresse>=COOLDOWN_CARESSE;}
+function beteAnourrir(b){return !b.retraite && b.nourri!==+jourPalia();}
+
+function ficheBete(b,i){
+  const a=ANIMAUX.find(x=>x.n===b.esp);
+  return `<div class="carte bete ${b.retraite?'retr':''}">
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="btn2 bascule ${b.donner?'on':''}" data-bt="${i}" data-k="donner">
+        ${b.donner?'✓':'○'} À donner</button>
+      <button class="btn2 bascule ${b.retraite?'on':''}" data-bt="${i}" data-k="retraite">
+        ${b.retraite?'✓':'○'} À la retraite</button>
+      <button class="btn2" data-bsup="${i}" style="margin-left:auto;color:var(--rouge)">🗑️</button></div>
+
+    <div class="champ-l"><label>Espèce</label>
+      <select class="champ" data-bs="${i}" data-k="esp">
+        ${ANIMAUX.map(x=>`<option value="${esc(x.n)}" ${b.esp===x.n?'selected':''}>${x.e} ${esc(x.n)}</option>`).join('')}
+      </select></div>
+
+    <div class="champ-l"><label>Nom de l'animal</label>
+      <input class="champ" data-bs="${i}" data-k="nom" value="${esc(b.nom)}" placeholder="Comment tu l'as appelé"></div>
+
+    <div style="display:flex;gap:11px;flex-wrap:wrap">
+      <div class="champ-l" style="flex:1;min-width:150px"><label>Âge</label>
+        <select class="champ" data-bs="${i}" data-k="age">
+          ${AGES.map(x=>`<option ${b.age===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="champ-l" style="flex:1;min-width:150px"><label>Enclos</label>
+        <select class="champ" data-bs="${i}" data-k="enclos">
+          ${ENCLOS.map(x=>`<option ${b.enclos===x?'selected':''}>${x}</option>`).join('')}</select></div></div>
+
+    <div style="display:flex;gap:11px;margin-top:14px">
+      <div style="flex:1;text-align:center">
+        <button class="grosbouton ${beteAcaresser(b)?'':'fait'}" data-bact="${i}" data-k="caresse">
+          <div style="font-size:24px">🤍</div><div>Câlin</div></button>
+        <div class="quand-b">${jamaisDepuis(b.caresse)}</div></div>
+      <div style="flex:1;text-align:center">
+        <button class="grosbouton ${beteAnourrir(b)?'':'fait'}" data-bact="${i}" data-k="nourri">
+          <div style="font-size:24px">🍽️</div><div>Nourrir</div></button>
+        <div class="quand-b">${b.nourri?jamaisDepuis(b.nourriT||0):'Jamais'}</div></div></div>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
+      <div style="font-size:15px;font-family:Fredoka;font-weight:600;margin-bottom:9px">Traits</div>
+      ${(b.traits||[]).map((t,j)=>`<div style="display:flex;gap:8px;margin-bottom:7px">
+        <input class="champ" list="traits-connus" data-btr="${i}" data-j="${j}" value="${esc(t)}"
+          placeholder="Trait ${j+1}" style="flex:1">
+        <button class="btn2" data-btrx="${i}" data-j="${j}" style="color:var(--rouge);padding:10px 14px">🗑️</button>
+      </div>`).join('')}
+      <button class="btn2 pointille" data-btrplus="${i}">＋ Ajouter un emplacement de trait</button></div>
+  </div>`;}
+
+const ETATS_M=[['rec','Recette découverte','📖'],['fab','Fabriqué','🔨'],['ach','Acheté','🛒'],
+  ['obt','Obtenu','✅'],['pla','Placé','🏠'],['col','Recoloré','🎨']];
+
+let selMeub=null,selCol=null,fSetM='tous',fCatM='tous',fMoyM='tous',fEtatM='tous',rechMeub='',vueMeub='liste';
+
+function compteCol(nom){
+  const M=S.meub||{},L=listeMeub().filter(m=>m.set===nom);
+  const c=lireCol(COLLECTIONS.findIndex(x=>x[0]===nom));
+  const total=c&&c.total?c.total:L.length;
+  const eus=(S.colEus||{})[nom]||L.filter(m=>(M[m.fr]||{}).obt).length;
+  return{L,total,eus,pct:total?Math.round(eus/total*100):0};}
+
 function vMeubles(){
-  let L=listeMeub();const tot=L.length;
-  const M=S.meub||(S.meub={});
-  const faits=L.filter(m=>M[m.n]&&M[m.n].fait).length;
+  if(selCol!=null)return vCollection(lireCol(selCol));
+  if(vueMeub==='manque')return vManque();
+  let L=listeMeub();const M=S.meub||(S.meub={});
+  const tot=L.length,eus=L.filter(m=>(M[m.fr]||{}).obt).length;
   if(rechMeub){const q=sansAccent(rechMeub);
-    L=L.filter(m=>sansAccent(m.n+' '+m.col+' '+m.ress+' '+m.ou).includes(q));}
-  if(fColMeub!=='tous')L=L.filter(m=>m.col===fColMeub);
-  if(fCatMeub!=='tous')L=L.filter(m=>m.cat===fCatMeub);
+    L=L.filter(m=>sansAccent([m.fr,m.en,m.set,m.mats,m.vendeur,m.cat].join(' ')).includes(q));}
+  if(fSetM!=='tous')L=L.filter(m=>m.set===fSetM);
+  if(fCatM!=='tous')L=L.filter(m=>m.cat===fCatM);
+  if(fMoyM!=='tous')L=L.filter(m=>m.moyen===fMoyM);
+  if(fEtatM==='eus')L=L.filter(m=>(M[m.fr]||{}).obt);
+  if(fEtatM==='manque')L=L.filter(m=>!(M[m.fr]||{}).obt);
   const sel=selMeub!=null?lireMeub(selMeub):null;
-  const cols=[...new Set(listeMeub().map(m=>m.col))];
+  const sets=[...new Set(listeMeub().map(m=>m.set))];
   return `
-  <div class="titre"><h1>Meubles</h1><span class="tag">${tot} fiches</span>
-    <span class="tag" style="background:#E6F8F1;color:var(--vert)">${faits} fabriqués</span></div>
-  <div class="sstitre">Ce qu'il faut pour chaque meuble, et où trouver le plan.</div>
+  <div class="titre"><h1>Meubles</h1><span class="tag">${COLLECTIONS.length} ensembles</span>
+    <span class="tag" style="background:#E6F8F1;color:var(--vert)">${eus}/${tot} pièces obtenues</span></div>
+  <div class="sstitre">Les ensembles vérifiés sur le wiki officiel, et ta collection.</div>
+
+  <div class="carte" style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <button class="btn2 ${vueMeub==='liste'?'on':''}" data-vm="liste">🪑 Toutes les pièces</button>
+    <button class="btn2" data-vm="manque">🔍 Ce qu'il me manque</button>
+    <span class="tag" style="margin-left:auto">Version ${VERSION_JEU} · vérifié le ${DATE_VERIF}</span></div>
 
   <div class="carte" style="margin-bottom:16px">
-    <div class="ct"><h3>Les collections</h3><span class="tag">Guilde de Tish</span></div>
-    <div class="g" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
-      ${COLLECTIONS.map(c=>{const dans=listeMeub().filter(m=>m.col===c.n);
-        const f=dans.filter(m=>M[m.n]&&M[m.n].fait).length;
-        return `<div class="carte" style="box-shadow:none;background:var(--fond);padding:15px">
-          <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
-            <h4 style="font-size:16px">${esc(c.n)}</h4>
-            <span class="rar" style="background:var(--violet)">Niveau ${c.niv}</span></div>
-          <div style="font-size:12px;font-weight:700;color:var(--pale);margin-top:3px">
-            ${esc(c.mat)} · chez ${esc(c.pnj)}${c.pieces?` · ${c.pieces} pièces`:''}</div>
-          <p style="font-size:12.5px;font-weight:600;color:var(--doux);line-height:1.5;margin-top:8px">${esc(c.d)}</p>
-          ${dans.length?`<div class="barre" style="margin-top:9px"><span style="width:${f/dans.length*100}%"></span></div>
-            <div style="font-size:11.5px;font-weight:800;color:var(--doux);margin-top:5px">${f}/${dans.length} fabriqués ici</div>`:''}
-        </div>`}).join('')}</div>
-  </div>
+    <div class="ct"><h3>Les ensembles</h3><span class="tag">clique pour ouvrir</span></div>
+    <div class="g" style="grid-template-columns:repeat(auto-fill,minmax(196px,1fr))">
+      ${listeCol().map(c=>{const k=compteCol(c.n);
+        return `<div class="carte col-c" data-col="${c.i}" style="box-shadow:none;background:var(--fond);padding:13px">
+          <div style="display:flex;justify-content:space-between;gap:6px;align-items:baseline">
+            <b style="font-size:14.5px">${esc(c.n)}</b>
+            ${c.niv?`<span class="rar" style="background:var(--violet);font-size:9.5px">niv. ${c.niv}</span>`:''}</div>
+          <div style="font-size:11px;font-weight:700;color:var(--pale);margin-top:3px">
+            ${c.total?`${k.eus} / ${c.total} pièces`:'nombre à vérifier'}</div>
+          ${c.total?`<div class="barre" style="margin-top:7px;height:6px"><span style="width:${k.pct}%"></span></div>`:''}
+        </div>`}).join('')}</div></div>
 
   ${barreAjout('meub','meub','Ajouter un meuble')}
 
   <div class="carte" style="margin-bottom:16px">
-    <input class="champ" id="rmeub" value="${esc(rechMeub)}" placeholder="Chercher un meuble…" style="margin-bottom:12px">
+    <input class="champ" id="rmeub" value="${esc(rechMeub)}" placeholder="Chercher : nom français ou anglais, ensemble, ressource, vendeur…" style="margin-bottom:12px">
     <div class="puces" style="margin-bottom:8px">
-      <button class="btn2 ${fColMeub==='tous'?'on':''}" data-fcol="tous">Toutes collections</button>
-      ${cols.map(c=>`<button class="btn2 ${fColMeub===c?'on':''}" data-fcol="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+      ${[['tous','Tout'],['eus','Possédés'],['manque','Manquants']]
+        .map(([k,l])=>`<button class="btn2 ${fEtatM===k?'on':''}" data-fem="${k}">${l}</button>`).join('')}</div>
+    <div class="puces" style="margin-bottom:8px">
+      <button class="btn2 ${fMoyM==='tous'?'on':''}" data-fmm="tous">Toutes obtentions</button>
+      ${Object.entries(MOYENS).filter(([k])=>listeMeub().some(m=>m.moyen===k))
+        .map(([k,v])=>`<button class="btn2 ${fMoyM===k?'on':''}" data-fmm="${k}">${v.e} ${v.n}</button>`).join('')}</div>
+    <div class="puces" style="margin-bottom:8px">
+      <button class="btn2 ${fSetM==='tous'?'on':''}" data-fsm="tous">Tous ensembles</button>
+      ${sets.map(x=>`<button class="btn2 ${fSetM===x?'on':''}" data-fsm="${esc(x)}">${esc(x)}</button>`).join('')}</div>
     <div class="puces">
-      <button class="btn2 ${fCatMeub==='tous'?'on':''}" data-fcatm="tous">Toutes catégories</button>
+      <button class="btn2 ${fCatM==='tous'?'on':''}" data-fcm="tous">Toutes catégories</button>
       ${CAT_MEUB.filter(c=>listeMeub().some(m=>m.cat===c))
-        .map(c=>`<button class="btn2 ${fCatMeub===c?'on':''}" data-fcatm="${esc(c)}">${esc(c)}</button>`).join('')}
+        .map(c=>`<button class="btn2 ${fCatM===c?'on':''}" data-fcm="${esc(c)}">${esc(c)}</button>`).join('')}
       ${btnPhotos('meub')}</div></div>
 
   ${sel?ficheMeub(sel):''}
 
   <div class="g" style="grid-template-columns:repeat(auto-fill,minmax(216px,1fr))">
-    ${L.map(m=>{const e=M[m.n]||{};
-      return `<div class="carte fc ${selMeub===m.i?'a':''} ${e.fait?'pris':''}" data-meub="${m.i}">
-        <button class="coche" data-meub-fait="${esc(m.n)}" title="Déjà fabriqué">${e.fait?chk:''}</button>
-        <button class="fav ${e.fav?'on':''}" data-meub-fav="${esc(m.n)}">⭐</button>
-        <div style="text-align:center"><div class="em">${vign('m:'+m.n,'🪑',44)}</div>
-          <div class="nom">${esc(m.n)}</div></div>
-        <div class="meta">${esc(m.col)} · ${esc(m.cat)}</div>
-        <div class="meta">${esc(m.taille)}${m.niv>1?` · niveau ${m.niv}`:''}</div>
-      </div>`}).join('')||'<div class="carte"><div class="vide">Aucun meuble avec ce filtre.</div></div>'}
+    ${L.map(m=>{const e=M[m.fr]||{},mo=MOYENS[m.moyen]||MOYENS.autre;
+      return `<div class="carte fc ${selMeub===m.i?'a':''} ${e.obt?'pris':''}" data-meub="${m.i}">
+        <button class="coche" data-me="${esc(m.fr)}" data-k="obt" title="Obtenu">${e.obt?chk:''}</button>
+        <button class="fav ${e.fav?'on':''}" data-me="${esc(m.fr)}" data-k="fav">⭐</button>
+        <div style="text-align:center"><div class="em">${vign('m:'+m.fr,'🪑',44)}</div>
+          <div class="nom">${esc(m.fr)}</div><div class="en">${esc(m.en)}</div></div>
+        <div class="meta">${esc(m.set)} · ${esc(m.cat)}</div>
+        <div style="text-align:center;margin-top:7px"><span class="rar" style="background:${mo.c}">${mo.e} ${mo.n}</span></div>
+      </div>`}).join('')||'<div class="carte"><div class="vide">Aucun meuble avec ces filtres.</div></div>'}
   </div>`;}
 
 function ficheMeub(m){
-  const e=(S.meub||{})[m.n]||{};
-  return `<div class="detail">
+  const e=(S.meub||{})[m.fr]||{},mo=MOYENS[m.moyen]||MOYENS.autre;
+  const lienMat=t=>{const[nm,q]=t.split('×');const r=listeRes().find(x=>sansAccent(x.n)===sansAccent(nm.trim()));
+    return r?`<button class="puce-l" data-res-nom="${esc(r.n)}">🔗 ${esc(nm.trim())} ×${q||'?'}</button>`
+            :`<span class="puce-l" style="opacity:.7">${esc(nm.trim())} ×${q||'?'}</span>`;};
+  return `<div class="detail" style="grid-template-columns:minmax(260px,360px) 1fr">
     <div class="carte">
-      <div style="text-align:center"><div>${vign('m:'+m.n,'🪑',96)}</div>
-        <h2 style="font-size:22px;margin-top:8px">${esc(m.n)}</h2>
-        <div style="margin-top:8px"><span class="rar" style="background:var(--violet)">${esc(m.col)}</span>
-          <span class="rar" style="background:var(--doux);margin-left:5px">${esc(m.cat)}</span></div></div>
-      <div style="margin-top:16px">
-        <div class="info"><span>Taille</span><span>${esc(m.taille)}</span></div>
-        <div class="info"><span>Établi nécessaire</span><span>${esc(m.etabli)}</span></div>
-        <div class="info"><span>Niveau fabrication</span><span>${m.niv}</span></div>
-        <div class="info"><span>Plan vendu par</span><span>${esc(m.plan)}</span></div>
-        <div class="info"><span>Achetable tout fait</span><span>${m.achat?'Oui — '+m.prix+' g':'Non, à fabriquer'}</span></div>
+      <div style="text-align:center"><div>${vign('m:'+m.fr,'🪑',96)}</div>
+        <h2 style="font-size:21px;margin-top:8px">${esc(m.fr)}</h2>
+        <div style="font-size:12.5px;color:var(--pale);font-weight:700;font-style:italic">${esc(m.en)}</div>
+        <div style="margin-top:9px"><span class="rar" style="background:${mo.c}">${mo.e} ${mo.n}</span></div></div>
+      <div style="margin-top:14px">
+        <div class="info"><span>Ensemble</span><span><button class="puce-l" data-col-nom="${esc(m.set)}" style="margin:0;padding:4px 10px">${esc(m.set)} →</button></span></div>
+        <div class="info"><span>Catégorie</span><span>${esc(m.cat)}</span></div>
+        <div class="info"><span>Placement</span><span>${esc(m.place)}</span></div>
+        <div class="info"><span>Vendeur</span><span>${esc(m.vendeur)}</span></div>
+        ${m.niv?`<div class="info"><span>Niveau requis</span><span>Meubles ${m.niv}</span></div>`:''}
+        ${m.prix?`<div class="info"><span>Prix</span><span>${m.prix.toLocaleString('fr-FR')} ${esc(m.monnaie)}</span></div>`:''}
+        ${m.teintes?`<div class="info"><span>Teintures</span><span>${m.teintes}</span></div>`:''}
+        <div class="info"><span>Vérifié</span><span>v${VERSION_JEU} · ${DATE_VERIF}</span></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-        <button class="btn2 ${e.fait?'on':''}" data-meub-fait="${esc(m.n)}" style="flex:1;padding:12px">${e.fait?'✓ Fabriqué':'Marquer fabriqué'}</button>
-        <button class="btn2 ${e.fav?'on':''}" data-meub-fav="${esc(m.n)}" style="padding:12px 15px">⭐</button>
-        ${btnImg('m:'+m.n)}
-        ${m.perso?`<button class="btn2" data-edit="meub" data-cle="${esc(m.n)}" style="padding:12px 15px">✏️</button>`:''}</div>
+        ${btnImg('m:'+m.fr)}
+        ${m.perso?`<button class="btn2" data-edit="meub" data-cle="${esc(m.fr)}" style="padding:12px 15px">✏️</button>`:''}</div>
       <button class="btn2" data-meub-fermer="1" style="width:100%;margin-top:9px">Fermer</button>
     </div>
     <div class="carte">
-      <div class="ct"><h3>Comment l'obtenir</h3></div>
-      <div class="bloc-f"><div class="tt-f">📍 Où et comment</div><p>${esc(m.ou)}</p></div>
-      <div class="bloc-f" style="border:0"><div class="tt-f">🧱 Ressources nécessaires</div><p>${esc(m.ress)}</p></div>
-      ${(m.ress||'').split(/,\s*/).filter(x=>x&&x!=='—').map(nm=>{
-        const r=listeRes().find(x=>sansAccent(x.n)===sansAccent(nm));
-        return r?`<button class="puce-l" data-res-nom="${esc(r.n)}">🔗 ${esc(r.n)} — ${esc(r.ou.slice(0,50))}…</button>`:''}).join('')}
+      <div class="ct"><h3>Ma checklist</h3></div>
+      <div class="puces" style="margin-bottom:16px">
+        ${ETATS_M.map(([k,l,ic])=>`<button class="btn2 ${e[k]?'on':''}" data-me="${esc(m.fr)}" data-k="${k}">${ic} ${l}</button>`).join('')}
+        <button class="btn2 ${e.fav?'on':''}" data-me="${esc(m.fr)}" data-k="fav">♡ Favori</button></div>
+      ${editeurCompo('meub:'+m.fr,'🧱 Ressources nécessaires','Nom de la ressource')}
+      <div class="bloc-f" style="border:0"><div class="tt-f">📍 Comment l'obtenir</div>
+        <p>${mo.e} ${mo.n}${m.vendeur&&m.vendeur!=='—'?' — chez '+esc(m.vendeur):''}${m.niv?', à partir du niveau '+m.niv:''}.</p></div>
     </div></div>`;}
+
+function vCollection(c){
+  const k=compteCol(c.n),M=S.meub||{};
+  const eusMan=(S.colEus||{})[c.n];
+  const besoins={};
+  k.L.forEach(m=>{if((M[m.fr]||{}).obt)return;
+    compo('meub:'+m.fr).forEach(x=>{if(!x.n)return;
+      besoins[x.n]=(besoins[x.n]||0)+(x.q||0);});});
+  const stock=S.stockMeub||(S.stockMeub={});
+  return `<div class="titre">
+    <button class="btn2" data-col-retour="1">← Tous les ensembles</button>
+    <h1 style="font-size:25px">${esc(c.n)}</h1>
+    ${c.niv?`<span class="tag">Meubles niveau ${c.niv}</span>`:''}</div>
+  <div class="sstitre">${c.d?esc(c.d):'Description à compléter.'}</div>
+
+  <div class="carte" style="margin-bottom:16px">
+    <div class="ct"><h3>Ma progression</h3><span class="tag">${k.eus} / ${c.total||'?'} — ${k.pct} %</span></div>
+    <div class="barre" style="height:13px"><span style="width:${k.pct}%"></span></div>
+    <div class="puces" style="margin-top:14px">
+      ${c.fab?`<span class="tag">🔨 ${c.fab} fabricables</span>`:''}
+      ${c.und?`<span class="tag">🕯️ ${c.und} Underground</span>`:''}
+      ${c.zeki?`<span class="tag">🎰 ${c.zeki} machine de Zeki</span>`:''}
+      ${c.quete?`<span class="tag">📜 ${c.quete} récompense de quête</span>`:''}
+      ${c.mat&&c.mat!=='?'?`<span class="tag">🧱 ${esc(c.mat)}</span>`:''}
+      ${c.pnj&&c.pnj!=='—'?`<span class="tag">👤 chez ${esc(c.pnj)}</span>`:''}</div>
+    ${c.total?`<div style="margin-top:14px;background:var(--fond);border-radius:14px;padding:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <b style="font-size:13.5px">Combien en as-tu déjà ?</b>
+      <div class="qte" style="margin:0"><button data-cole="${esc(c.n)}" data-v="-1">−</button>
+        <b>${eusMan!==undefined?eusMan:k.eus}</b><button data-cole="${esc(c.n)}" data-v="1">+</button></div>
+      <span style="font-size:12.5px;font-weight:600;color:var(--doux)">sur ${c.total} — pas besoin de saisir chaque pièce</span></div>`:''}
+  </div>
+
+  ${Object.keys(besoins).length?`<div class="carte" style="margin-bottom:16px">
+    <div class="ct"><h3>🧾 Préparer cet ensemble</h3><span class="tag">pièces non obtenues</span></div>
+    ${Object.entries(besoins).map(([n,q])=>{const ai=stock[n]||0,reste=Math.max(0,q-ai);
+      return `<div class="ligne-ing ${reste?'':'ok'}">
+        <span style="flex:1;font-weight:700;font-size:13.5px">${esc(n)}</span>
+        <span style="font-size:12.5px;font-weight:800;color:var(--doux)">besoin ${q}</span>
+        <div class="qte" style="margin:0"><button data-stm="${esc(n)}" data-v="-1">−</button><b>${ai}</b><button data-stm="${esc(n)}" data-v="1">+</button></div>
+        <span class="dispo" style="color:${reste?'var(--rouge)':'var(--vert)'}">${reste?'−'+reste:'✓'}</span></div>`}).join('')}
+    <p style="font-size:12.5px;font-weight:600;color:var(--doux);margin-top:10px">
+      Entre ce que tu possèdes déjà : la colonne de droite montre ce qu'il reste à récolter.</p></div>`:''}
+
+  <div class="g" style="grid-template-columns:repeat(auto-fill,minmax(216px,1fr))">
+    ${k.L.map(m=>{const e=M[m.fr]||{},mo=MOYENS[m.moyen]||MOYENS.autre;
+      return `<div class="carte fc ${e.obt?'pris':''}" data-meub="${m.i}">
+        <button class="coche" data-me="${esc(m.fr)}" data-k="obt">${e.obt?chk:''}</button>
+        <div style="text-align:center"><div class="em">${vign('m:'+m.fr,'🪑',44)}</div>
+          <div class="nom">${esc(m.fr)}</div></div>
+        <div class="meta">${esc(m.cat)}</div>
+        <div style="text-align:center;margin-top:6px"><span class="rar" style="background:${mo.c}">${mo.e}</span></div>
+      </div>`}).join('')||'<div class="carte"><div class="vide">Aucune pièce enregistrée pour cet ensemble.<br>Utilise la barre d\'ajout pour les saisir au fur et à mesure.</div></div>'}
+  </div>`;}
+
+function vManque(){
+  const M=S.meub||{};
+  let L=listeMeub().filter(m=>!(M[m.fr]||{}).obt);
+  if(fMoyM!=='tous')L=L.filter(m=>m.moyen===fMoyM);
+  const parMoyen={};L.forEach(m=>{(parMoyen[m.moyen]=parMoyen[m.moyen]||[]).push(m);});
+  return `<div class="titre">
+    <button class="btn2" data-vm="liste">← Toutes les pièces</button>
+    <h1 style="font-size:25px">Ce qu'il me manque</h1><span class="tag">${L.length}</span></div>
+  <div class="sstitre">Classé par façon de l'obtenir, pour organiser tes sorties.</div>
+  <div class="carte" style="margin-bottom:16px"><div class="puces">
+    <button class="btn2 ${fMoyM==='tous'?'on':''}" data-fmm="tous">Tout</button>
+    ${Object.entries(MOYENS).filter(([k])=>listeMeub().some(m=>m.moyen===k))
+      .map(([k,v])=>`<button class="btn2 ${fMoyM===k?'on':''}" data-fmm="${k}">${v.e} ${v.n}</button>`).join('')}</div></div>
+  ${Object.entries(parMoyen).map(([k,arr])=>{const mo=MOYENS[k]||MOYENS.autre;
+    return `<div class="carte" style="margin-bottom:16px">
+      <div class="ct"><h3>${mo.e} ${mo.n}</h3><span class="tag">${arr.length}</span></div>
+      <div class="g" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+        ${arr.map(m=>`<div class="carte fc" data-meub="${m.i}" style="box-shadow:none;background:var(--fond)">
+          <button class="coche" data-me="${esc(m.fr)}" data-k="obt"></button>
+          <div style="text-align:center;padding-top:4px"><div class="nom">${esc(m.fr)}</div>
+            <div class="meta">${esc(m.set)}</div></div></div>`).join('')}</div></div>`}).join('')
+    ||'<div class="carte"><div class="vide">Tout est obtenu, bravo !</div></div>'}`;}
+
 
 /* ============================================================
    ██ RESSOURCES ET MINAGE
@@ -1734,7 +1990,8 @@ function ficheRes(r){
     </div>
     <div class="carte">
       <div class="ct"><h3>À quoi ça sert</h3></div>
-      <div class="bloc-f" style="border:0"><p>${esc(r.usage)}</p></div>
+      <div class="bloc-f"><p>${esc(r.usage)}</p></div>
+      ${editeurCompo('res:'+r.n,'🧱 Comment la fabriquer','Nom du composant')}
       ${ficheLiens(r.n)||'<div class="vide" style="padding:22px">Aucun lien trouvé pour l’instant. Ils apparaîtront quand les ingrédients des recettes seront remplis.</div>'}
     </div></div>`;}
 
@@ -2121,8 +2378,8 @@ function vParcours(id){
           <div class="obj-chk">${f?chkV:''}</div>
           <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14.5px">${esc(o[0])}</div>
             <div class="barre" style="margin-top:6px;height:7px"><span style="width:${Math.min(100,v/c*100)}%;background:${f?'var(--vert)':P.c}"></span></div></div>
-          <div class="obj-n"><button data-obj="${id}" data-i="${i}" data-v="-1">−</button>
-            <b>${v}/${c}</b><button data-obj="${id}" data-i="${i}" data-v="1">+</button></div>
+          <div class="obj-n"><button data-pobj="${id}" data-i="${i}" data-v="-1">−</button>
+            <b>${v}/${c}</b><button data-pobj="${id}" data-i="${i}" data-v="1">+</button></div>
         </div>`}).join('')}
       ${(()=>{const c=cible(pal.or,d.diff),v=d.or||0,f=v>=c;
         return `<div class="obj ${f?'fait':''}">
@@ -2405,7 +2662,7 @@ function svgRoue(){
       <text x="${C}" y="${C-R*0.46}" text-anchor="middle" font-family="Fredoka,sans-serif"
         font-size="${petit?13:16}" font-weight="600" fill="#fff"
         style="paint-order:stroke;stroke:rgba(0,0,0,.25);stroke-width:2.5px">${esc(a.n)}</text></g>`;}).join('');
-  return `<svg viewBox="0 0 400 400" style="width:100%;max-width:400px;display:block;margin:0 auto">
+  return `<svg viewBox="0 0 400 400" style="width:100%;height:auto;display:block;margin:0 auto">
     <g id="roue-g" style="transform-origin:200px 200px;transform:rotate(${rouePos}deg)">
       ${corps}${etiquettes}</g>
     <circle cx="${C}" cy="${C}" r="30" fill="#fff" stroke="#EAE0FA" stroke-width="3"/>
@@ -2417,10 +2674,10 @@ function vRoue(){
   const A=S.roue;
   return `<div class="titre"><h1>Roue de la chance</h1><span class="tag">${A.length} activités</span></div>
   <div class="sstitre">Tu ne sais pas quoi faire ? Laisse la roue décider.</div>
-  <div class="g" style="grid-template-columns:minmax(300px,1fr) minmax(280px,380px);align-items:start">
+  <div class="g duo" style="align-items:start">
 
-    <div class="carte" style="text-align:center;padding:24px">
-      ${svgRoue()}
+    <div class="carte" style="text-align:center;padding:24px;overflow:hidden">
+      <div style="max-width:min(400px,88vw);margin:0 auto">${svgRoue()}</div>
       <button class="btn" id="tourner" ${roueTourne||!A.length?'disabled':''}
         style="margin-top:20px;font-size:17px;padding:15px 34px">${roueTourne?'…':'Tourner la roue'}</button>
       ${roueRes?`<div class="resultat">
@@ -2488,16 +2745,19 @@ function ajouterElement(quoi){
   else if(t==='out'){
     if(listeOutils().some(x=>sansAccent(x.nom)===sansAccent(v.n))){alert('Cet outil existe déjà.');return;}
     S.outSup.push([v.n,v.cat||'machine','À compléter',v.pnj||'—',+v.niv||1,'À compléter','À compléter']);
+    if(v.compo)poserCompo('out:'+v.n,v.compo);
     selOut=sansAccent(v.n);}
 
   else if(t==='meub'){
-    if(listeMeub().some(x=>sansAccent(x.n)===sansAccent(v.n))){alert('Ce meuble existe déjà.');return;}
-    S.meubSup.push([v.n,v.col||'Perso',v.cat||'Autres',v.taille||'1×1','À compléter',0,0,'À compléter','Établi',1,'—',1]);
+    if(listeMeub().some(x=>sansAccent(x.fr)===sansAccent(v.n))){alert('Ce meuble existe déjà.');return;}
+    S.meubSup.push([v.n,v.en||v.n,v.col||'Base',v.cat||'Autres','Intérieur',v.moyen||'fab',0,'Or','—',1,'',0,1]);
+    if(v.compo)poserCompo('meub:'+v.n,v.compo);
     selMeub=MEUBLES.length+S.meubSup.length-1;}
 
   else if(t==='res'){
     if(listeRes().some(x=>sansAccent(x.n)===sansAccent(v.n))){alert('Cette ressource existe déjà.');return;}
     S.resSup.push([v.n,v.cat||'autre',v.reg||'K','À compléter','Aucun',1,0,0,'À compléter']);
+    if(v.compo)poserCompo('res:'+v.n,v.compo);
     selRes=RESSOURCES.length+S.resSup.length-1;}
 
   else if(t==='obj'){
@@ -2507,6 +2767,7 @@ function ajouterElement(quoi){
   else if(t==='rec'){
     if(toutesRec().some(x=>x[0]===v.n)){alert('Cette recette existe déjà.');return;}
     S.recSup.push({fr:v.n,en:v.n,st:v.st||'C',pas:1,xp:0,foc:0,prix:0,rar:'C'});
+    if(v.compo)poserCompo('rec:'+v.n,v.compo);
     selR=toutesRec().length-1;}
 
   else{
@@ -2539,7 +2800,7 @@ function valsDe(t,o){
   if(t==='anm')return{n:o.n,p:o.prod,e:o.e,c:o.cout,ou:o.ou,bes:o.besoin,ast:o.astuce};
   if(t==='cul')return{n:o.nom,e:o.e,b:o.b,j:o.jours,p:o.prixN};
   if(t==='out')return{n:o[0],cat:o[1],ou:o[2],pnj:o[3],niv:o[4],mats:o[5],desc:o[6]};
-  if(t==='meub')return{n:o[0],col:o[1],cat:o[2],taille:o[3],ou:o[4],prix:o[6],ress:o[7],etabli:o[8],niv:o[9],plan:o[10]};
+  if(t==='meub')return{n:o[0],en:o[1],col:o[2],cat:o[3],place:o[4],moyen:o[5],prix:o[6],monnaie:o[7],vendeur:o[8],niv:o[9],teintes:o[11]};
   if(t==='res')return{n:o[0],cat:o[1],reg:o[2],ou:o[3],outil:o[4],niv:o[5],prixN:o[6],prixE:o[7],usage:o[8]};
   if(t==='obj')return{n:o.n,e:o.e,c:o.c};
   if(t==='rec')return{n:o.fr,st:o.st};
@@ -2586,8 +2847,8 @@ function appliquerEdit(o,v){
 
   else if(t==='out'){o[0]=v.n;o[1]=v.cat;o[2]=v.ou||o[2];o[3]=v.pnj;o[4]=+v.niv||1;
     o[5]=v.mats||o[5];o[6]=v.desc||o[6];}
-  else if(t==='meub'){o[0]=v.n;o[1]=v.col;o[2]=v.cat;o[3]=v.taille;o[4]=v.ou||o[4];
-    o[5]=+v.prix?1:0;o[6]=+v.prix||0;o[7]=v.ress||o[7];o[8]=v.etabli||o[8];o[9]=+v.niv||o[9];o[10]=v.plan||o[10];}
+  else if(t==='meub'){o[0]=v.n;o[1]=v.en||o[1];o[2]=v.col;o[3]=v.cat;o[4]=v.place||o[4];o[5]=v.moyen||o[5];
+    o[6]=+v.prix||0;o[7]=v.monnaie||o[7];o[8]=v.vendeur||o[8];o[9]=+v.niv||o[9];o[11]=+v.teintes||0;}
   else if(t==='res'){o[0]=v.n;o[1]=v.cat;o[2]=v.reg;o[3]=v.ou||o[3];o[4]=v.outil||o[4];
     o[5]=+v.niv||o[5];o[6]=+v.prixN||0;o[7]=+v.prixE||0;o[8]=v.usage||o[8];}
   else if(t==='obj'){const anc=o.n;o.n=v.n;o.e=v.e||o.e;o.c=v.c;
@@ -2820,7 +3081,7 @@ const CAT_PHOTOS=[
       return{k:'r:'+r.en,n:r.fr,c:'#F0A62F',e:STATIONS[r.st].e};})},
   {id:'obj',n:'Inventaire',ic:'🎒',f:()=>OBJETS.concat(S.sup).map(o=>({k:'o:'+o.n,n:o.n,c:'#8B7BD8',e:o.e}))},
   {id:'out',n:'Outils',ic:'⚒️',f:()=>listeOutils().map(o=>({k:'t:'+o.nom,n:o.nom,c:'#7A8A9B',e:o.e}))},
-  {id:'meub',n:'Meubles',ic:'🪑',f:()=>listeMeub().map(m=>({k:'m:'+m.n,n:m.n,c:'#B85FD0',e:'🪑'}))},
+  {id:'meub',n:'Meubles',ic:'🪑',f:()=>listeMeub().map(m=>({k:'m:'+m.fr,n:m.fr,c:'#B85FD0',e:'🪑'}))},
   {id:'res',n:'Ressources',ic:'⛏️',f:()=>listeRes().map(r=>({k:'s:'+r.n,n:r.n,c:'#8B7BD8',
      e:(CAT_RES.find(x=>x.id===r.cat)||CAT_RES[7]).e}))},
   {id:'jar',n:'Potager',ic:'🌱',f:()=>CULTURES.map(c=>({k:'j:'+c.id,n:c.nom,c:'#2FB58A',e:c.e}))}];
@@ -2839,13 +3100,19 @@ const CHAMPS={
        {id:'b',opts:()=>Object.entries(BONUS).map(([k,v])=>[k,v.nom]),w:150},
        {id:'j',ph:'Jours',f:.5,w:90},{id:'p',ph:'Prix',f:.5,w:90}],
   out:[{id:'n',ph:'Nom de l\'outil ou de la machine'},{id:'cat',opts:()=>COINS.map(c=>[c.id,c.e+' '+c.n]),w:170},
-       {id:'pnj',ph:'Chez qui',f:.8},{id:'niv',ph:'Niveau',f:.4,w:90}],
-  meub:[{id:'n',ph:'Nom du meuble'},{id:'col',ph:'Collection',f:1},
-        {id:'cat',opts:()=>CAT_MEUB.map(c=>[c,c]),w:140},{id:'taille',ph:'Taille',f:.5,w:90}],
+       {id:'pnj',ph:'Chez qui',f:.8},{id:'niv',ph:'Niveau',f:.4,w:90},
+       {id:'compo',ph:'Matériaux — Barre de fer×5',f:2.5}],
+  meub:[{id:'n',ph:'Nom français'},{id:'en',ph:'Nom anglais',f:1},
+        {id:'col',opts:()=>COLLECTIONS.map(c=>[c[0],c[0]]),w:150},
+        {id:'cat',opts:()=>CAT_MEUB.map(c=>[c,c]),w:150},
+        {id:'moyen',opts:()=>Object.entries(MOYENS).map(([k,v])=>[k,v.e+' '+v.n]),w:170},
+        {id:'compo',ph:'De quoi c\'est fait — Nom×2, Autre×5',f:2.5}],
   res:[{id:'n',ph:'Nom de la ressource'},{id:'cat',opts:()=>CAT_RES.map(c=>[c.id,c.e+' '+c.n]),w:160},
-       {id:'reg',opts:()=>[['K','Kilima'],['B','Bahari'],['E','Elderwood'],['R','Hautes Terres'],['P','Fabriquée']],w:140}],
+       {id:'reg',opts:()=>[['K','Kilima'],['B','Bahari'],['E','Elderwood'],['R','Hautes Terres'],['P','Fabriquée']],w:140},
+       {id:'compo',ph:'Si elle se fabrique — Pierre×2',f:2.5}],
   obj:[{id:'n',ph:'Nom de l\'objet'},{id:'e',ph:'Emoji',f:.4,w:80},{id:'c',opts:()=>CATS.map(c=>[c,c]),w:150}],
-  rec:[{id:'n',ph:'Nom de la recette'},{id:'st',opts:()=>Object.entries(STATIONS).map(([k,v])=>[k,v.e+' '+v.n]),w:170}],
+  rec:[{id:'n',ph:'Nom de la recette'},{id:'st',opts:()=>Object.entries(STATIONS).map(([k,v])=>[k,v.e+' '+v.n]),w:170},
+       {id:'compo',ph:'Ingrédients — Tomate×2, Riz×1',f:2.5}],
   poissons:[{id:'n',ph:'Nom en français'},{id:'e',ph:'Nom anglais',f:1.2},{id:'reg',opts:()=>OPT_REGION},
             {id:'mom',opts:()=>OPT_MOMENT,w:150},{id:'rar',opts:()=>OPT_RARETE,w:120}],
   insectes:[{id:'n',ph:'Nom en français'},{id:'e',ph:'Nom anglais',f:1.2},{id:'reg',opts:()=>OPT_REGION},
@@ -2855,9 +3122,10 @@ const CHAMPS={
 const CHAMPS_PLUS={
   out:[{id:'ou',ph:'Comment l\'obtenir',f:2.5},{id:'mats',ph:'Ressources nécessaires',f:2},
        {id:'desc',ph:'À quoi ça sert',f:2.5}],
-  meub:[{id:'ou',ph:'Comment l\'obtenir',f:2.5},{id:'ress',ph:'Ressources nécessaires',f:2},
-        {id:'etabli',ph:'Établi nécessaire'},{id:'niv',ph:'Niveau',f:.4,w:80},
-        {id:'plan',ph:'Plan vendu par'},{id:'prix',ph:'Prix si achetable',f:.6,w:110}],
+  meub:[{id:'place',opts:()=>[['Intérieur','Intérieur'],['Extérieur','Extérieur'],['Mur','Mur'],['Plafond','Plafond']],w:140},
+        {id:'vendeur',ph:'Vendeur ou PNJ'},{id:'niv',ph:'Niveau',f:.4,w:90},
+        {id:'prix',ph:'Prix',f:.5,w:100},{id:'monnaie',ph:'Monnaie',f:.5,w:110},
+        {id:'teintes',ph:'Teintures',f:.4,w:100}],
   res:[{id:'ou',ph:'Où et comment l\'obtenir',f:2.5},{id:'outil',ph:'Outil nécessaire'},
        {id:'niv',ph:'Niveau',f:.4,w:80},{id:'prixN',ph:'Prix',f:.5,w:90},{id:'prixE',ph:'Prix ⭐',f:.5,w:90},
        {id:'usage',ph:'À quoi ça sert',f:2.5}],
@@ -2884,6 +3152,36 @@ function barreAjout(id,champs,libelle){
 function val(id){const e=$('#'+id);return e?e.value.trim():'';}
 
 // Modifier ou supprimer l'image d'un élément précis
+/* Éditeur « de quoi c'est fait », commun aux recettes, meubles, outils et ressources.
+   La liste est toujours modifiable à la main : rien ne dépend de l'assistant. */
+function poserCompo(cle,txt){
+  if(!S.compo)S.compo={};
+  const L=String(txt||'').split(/[,;\n]/).map(t=>t.trim()).filter(Boolean).map(t=>{
+    const m=t.match(/^(.*?)\s*[×x*]\s*(\d+)$/);
+    return m?{n:m[1].trim(),q:Math.max(1,+m[2])}:{n:t,q:1};});
+  if(L.length)S.compo[cle]=L;}
+function compo(cle){return (S.compo&&S.compo[cle])||[];}
+function editeurCompo(cle,titre,libelle){
+  const L=compo(cle);
+  return `<div class="ct" style="margin-top:4px"><h3>${titre}</h3>
+      <span class="tag">${L.length} ${L.length>1?'éléments':'élément'}</span></div>
+    ${L.map((x,j)=>{const ai=S.inv[x.n]||0,ok=ai>=x.q;
+      return `<div class="ligne-ing ${ok&&x.n?'ok':''}">
+        <input list="tousobjets" data-cn="${esc(cle)}" data-j="${j}" value="${esc(x.n)}" placeholder="${esc(libelle)}">
+        <div class="qte" style="margin:0"><button data-cq="${esc(cle)}" data-j="${j}" data-v="-1">−</button>
+          <b>${x.q}</b><button data-cq="${esc(cle)}" data-j="${j}" data-v="1">+</button></div>
+        <button class="mini-b" data-res-nom="${esc(x.n)}" title="Voir sa fiche" ${x.n?'':'disabled'}>🔗</button>
+        <button class="mini-b" data-cx="${esc(cle)}" data-j="${j}" title="Retirer cette ligne" style="color:var(--rouge)">✕</button>
+        <span class="dispo">${ai}/${x.q}</span></div>`}).join('')}
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="btn" data-cplus="${esc(cle)}">+ Ajouter une ligne</button>
+      ${L.length?`<button class="btn2" data-cvide="${esc(cle)}">Tout effacer</button>`:''}</div>
+    ${L.length?(()=>{const m=L.filter(x=>x.n&&(S.inv[x.n]||0)<x.q);
+      return `<div style="margin-top:12px;padding:12px;border-radius:14px;
+        background:${m.length?'var(--fond)':'#EAF9F3'};font-size:13.5px;font-weight:800;
+        color:${m.length?'var(--doux)':'var(--vert)'}">
+        ${m.length?'Il te manque : '+m.map(x=>x.n+' ×'+(x.q-(S.inv[x.n]||0))).join(', '):'✓ Tu as tout ce qu\'il faut'}</div>`})():''}`;}
+
 function btnImg(cle){return `<button class="btn2" data-photo="${esc(cle)}" title="${PH[cle]?'Changer l\'image':'Ajouter une image'}" style="padding:12px 15px">
   ${PH[cle]?'✎ Changer':'🖼️ Image'}</button>${PH[cle]?`<button class="btn2" data-photo-del="${esc(cle)}" title="Supprimer l'image" style="padding:12px 15px;color:var(--rouge)">✕</button>`:''}`;}
 function btnPhotos(cat){
@@ -2930,7 +3228,7 @@ function vDecoupe(){
       <div style="font-size:12px;font-weight:800;color:var(--doux);margin-bottom:6px">Taille du découpage : ${decoupeTaille}%</div>
       <input type="range" id="taille-dec" min="5" max="40" value="${decoupeTaille}" style="width:100%;accent-color:var(--violet)">
       <div style="max-height:300px;overflow-y:auto;margin-top:14px">
-        ${C.map((x,i)=>`<button class="cible ${i===decoupeIdx?'a':''} ${PH[x.k]?'ok':''}" data-cible="${i}">
+        ${C.map((x,i)=>`<button class="cible ${i===decoupeIdx?'a':''} ${PH[x.k]?'ok':''}" data-cibimg="${i}">
           <span class="mini-av" style="${PH[x.k]?'':'background:'+x.c}">${PH[x.k]?`<img src="${PH[x.k]}">`:(x.e||esc(x.n[0]))}</span>
           ${esc(x.n)}${PH[x.k]?' ✓':''}</button>`).join('')}</div>
     </div>
@@ -3128,22 +3426,9 @@ function detailRec(r){
         ${r.perso?`<button class="btn2" data-edit="rec" data-cle="${esc(r.en)}" style="padding:12px 15px">✏️</button>`:''}</div>
     </div>
     <div class="carte">
-      <div class="ct"><h3>Ingrédients</h3>
-        <button class="btn ia-only" data-ing1="${r.i}">${r.ing&&r.ing.length?'Actualiser':'Demander'}</button></div>
-      ${r.ing&&r.ing.length?`
-        <div>${r.ing.map((x,j)=>{const ai=S.inv[x.n]||0,ok=ai>=x.q;
-          return `<div class="ligne-ing ${ok?'ok':''}">
-            <input list="tousobjets" data-ingn="${r.i}" data-j="${j}" value="${esc(x.n)}">
-            <div class="qte" style="margin:0"><button data-ingq="-1" data-ir="${r.i}" data-j="${j}">−</button><b>${x.q}</b><button data-ingq="1" data-ir="${r.i}" data-j="${j}">+</button></div>
-            <button class="mini-b" data-res-nom="${esc(x.n)}" title="Voir sa fiche">🔗</button>
-            <span class="dispo">${ai}/${x.q}</span></div>`}).join('')}</div>
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn2" data-ingplus="${r.i}">+ Ligne</button>
-          <button class="btn2" data-ingclear="${r.i}">Effacer</button></div>
-        <div style="margin-top:14px;padding:13px;border-radius:14px;background:${et.code==='ok'?'#EAF9F3':'var(--fond)'};
-          font-size:14px;font-weight:800;color:${et.code==='ok'?'var(--vert)':'var(--doux)'}">
-          ${et.code==='ok'?'✓ Tu as tout ce qu\'il faut, va cuisiner !':'Il te manque : '+et.manque.map(m=>m.n+' ×'+(m.q-(S.inv[m.n]||0))).join(', ')}</div>`
-      :'<div class="vide">Clique sur « Demander » : l\'assistant écrit la liste des ingrédients, que tu pourras corriger.</div>'}
+      <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+        <button class="btn ia-only" data-ing1="${r.i}">✨ Remplir par l'assistant</button></div>
+      ${editeurCompo('rec:'+r.en,'Ingrédients','Nom de l\'ingrédient')}
     </div></div>`;}
 
 /* ---------- HABITANTS ---------- */
@@ -3341,7 +3626,7 @@ function vInventaire(){
   <div class="puces" style="margin-bottom:16px">${['Tous',...CATS].map(c=>`<button class="btn2 ${filtreInv===c?'on':''}" data-cat="${c}">${c}</button>`).join('')}
     ${btnPhotos('obj')}</div>
   ${barreAjout('obj','obj','Ajouter un objet')}
-  <div class="g" style="grid-template-columns:1fr 296px;align-items:start">
+  <div class="g duo-inv" style="align-items:start">
     <div class="g objets">${L.map(o=>{const q=S.inv[o.n]||0;
       return `<div class="carte objet ${q>0?'a':''}" data-obj="${esc(o.n)}" style="position:relative">
         <button class="crayon" data-photo="o:${esc(o.n)}" title="${PH['o:'+o.n]?'Changer l\'image':'Ajouter une image'}" style="right:${o.perso?'46px':'27px'}">${PH['o:'+o.n]?'✎':'🖼️'}</button>
@@ -3421,6 +3706,7 @@ function rendre(){
     ${toastAction?'<button id="annuler-toast" class="toast-b">Annuler</button>':''}</div>`:'')+(hist.length?`<button class="retour" id="btn-retour">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Retour</button>`:'')+VUES[vue]();
   $('#tousobjets').innerHTML=tousNoms().map(n=>`<option value="${esc(n)}">`).join('');
+  $('#traits-connus').innerHTML=TRAITS_CONNUS.map(n=>`<option value="${esc(n)}">`).join('');
   if(vue==='calendrier'&&!calSel){const z=document.getElementById('cal-scroll');
     if(z&&calAnnee===new Date().getFullYear())z.scrollLeft=z.scrollWidth;}
 }
@@ -3514,7 +3800,9 @@ $('#fichier').addEventListener('change',async e=>{
   if(img){PH[photoCible]=img;savePhotos();}
   photoCible='';rendre();});
 
-document.addEventListener('click',async e=>{
+document.addEventListener('click',e=>{ traiterClic(e).catch(err=>{
+  console.error('Clic :',err); montrerToast('Une action a échoué, mais l\'application continue',null); }); });
+async function traiterClic(e){
   if(e.target.closest('#btn-retour')){retour();return;}
   if(e.target.id==='annuler-toast'){annulerToast();return;}
   // Deux boutons distincts : l'un change l'image, l'autre la supprime
@@ -3569,18 +3857,45 @@ document.addEventListener('click',async e=>{
   if(otc&&!e.target.closest('[data-oe]')){pousser();const id=otc.dataset.out;
     selOut=selOut===id?null:id;rendre();window.scrollTo({top:0,behavior:'smooth'});return;}
 
+  /* Composition : de quoi c'est fait */
+  const cp2=e.target.closest('[data-cplus]');
+  if(cp2){const k=cp2.dataset.cplus;if(!S.compo)S.compo={};
+    S.compo[k]=(S.compo[k]||[]).concat([{n:'',q:1}]);save();rendre();return;}
+  const cq=e.target.closest('[data-cq]');
+  if(cq){const k=cq.dataset.cq,j=+cq.dataset.j,L=S.compo[k];
+    if(L&&L[j]){L[j].q=Math.max(1,L[j].q+ +cq.dataset.v);save();rendre();}return;}
+  const cx=e.target.closest('[data-cx]');
+  if(cx){const k=cx.dataset.cx,j=+cx.dataset.j,L=S.compo[k];
+    if(L){L.splice(j,1);if(!L.length)delete S.compo[k];save();rendre();}return;}
+  const cvd=e.target.closest('[data-cvide]');
+  if(cvd){if(!confirm('Effacer toute la composition ?'))return;
+    const k=cvd.dataset.cvide,sauve=S.compo[k];delete S.compo[k];save();rendre();
+    montrerToast('Composition effacée',()=>{S.compo[k]=sauve;save();});return;}
+
   /* Meubles */
-  const fco=e.target.closest('[data-fcol]');if(fco){fColMeub=fco.dataset.fcol;rendre();return;}
-  const fcm=e.target.closest('[data-fcatm]');if(fcm){fCatMeub=fcm.dataset.fcatm;rendre();return;}
-  const mfa=e.target.closest('[data-meub-fait]');
-  if(mfa){e.stopPropagation();const n=mfa.dataset.meubFait,x=S.meub[n]||(S.meub[n]={});
-    x.fait=!x.fait;save();rendre();return;}
-  const mfv=e.target.closest('[data-meub-fav]');
-  if(mfv){e.stopPropagation();const n=mfv.dataset.meubFav,x=S.meub[n]||(S.meub[n]={});
-    x.fav=!x.fav;save();rendre();return;}
+  const vm=e.target.closest('[data-vm]');if(vm){vueMeub=vm.dataset.vm;selMeub=null;selCol=null;rendre();return;}
+  const fsm=e.target.closest('[data-fsm]');if(fsm){fSetM=fsm.dataset.fsm;rendre();return;}
+  const fcm=e.target.closest('[data-fcm]');if(fcm){fCatM=fcm.dataset.fcm;rendre();return;}
+  const fmm=e.target.closest('[data-fmm]');if(fmm){fMoyM=fmm.dataset.fmm;rendre();return;}
+  const fem=e.target.closest('[data-fem]');if(fem){fEtatM=fem.dataset.fem;rendre();return;}
+  const me=e.target.closest('[data-me]');
+  if(me){e.stopPropagation();const n=me.dataset.me,k2=me.dataset.k,x=S.meub[n]||(S.meub[n]={});
+    x[k2]=!x[k2];if(k2==='fab'||k2==='ach')x.obt=x.obt||x[k2];save();rendre();return;}
+  const colc=e.target.closest('[data-col]');
+  if(colc){pousser();selCol=+colc.dataset.col;selMeub=null;rendre();window.scrollTo({top:0});return;}
+  const coln=e.target.closest('[data-col-nom]');
+  if(coln){const i=COLLECTIONS.findIndex(x=>x[0]===coln.dataset.colNom);
+    if(i>=0){pousser();selCol=i;selMeub=null;rendre();window.scrollTo({top:0});}return;}
+  if(e.target.closest('[data-col-retour]')){selCol=null;rendre();return;}
+  const cole=e.target.closest('[data-cole]');
+  if(cole){const n=cole.dataset.cole,c=lireCol(COLLECTIONS.findIndex(x=>x[0]===n));
+    const v=(S.colEus[n]!==undefined?S.colEus[n]:compteCol(n).eus)+ +cole.dataset.v;
+    S.colEus[n]=Math.max(0,Math.min(c.total||999,v));save();rendre();return;}
+  const stm=e.target.closest('[data-stm]');
+  if(stm){const n=stm.dataset.stm;S.stockMeub[n]=Math.max(0,(S.stockMeub[n]||0)+ +stm.dataset.v);save();rendre();return;}
   if(e.target.closest('[data-meub-fermer]')){selMeub=null;rendre();return;}
   const mbc=e.target.closest('[data-meub]');
-  if(mbc&&!e.target.closest('[data-meub-fait],[data-meub-fav]')){
+  if(mbc&&!e.target.closest('[data-me]')){
     pousser();const i=+mbc.dataset.meub;selMeub=selMeub===i?null:i;rendre();window.scrollTo({top:0,behavior:'smooth'});return;}
 
   /* Ressources */
@@ -3636,8 +3951,8 @@ document.addEventListener('click',async e=>{
   if(e.target.closest('[data-parc-retour]')){selParc=null;rendre();return;}
   const df=e.target.closest('[data-diff]');
   if(df){S.parc[df.dataset.diff].diff=df.dataset.v;save();rendre();return;}
-  const ob=e.target.closest('[data-obj]');
-  if(ob){const d=S.parc[ob.dataset.obj],i=ob.dataset.i;
+  const ob=e.target.closest('[data-pobj]');
+  if(ob){const d=S.parc[ob.dataset.pobj];if(!d)return;const i=ob.dataset.i;
     d.c[i]=Math.max(0,(d.c[i]||0)+ +ob.dataset.v);save();rendre();return;}
   const oo=e.target.closest('[data-or]');
   if(oo){const d=S.parc[oo.dataset.or];
@@ -3705,8 +4020,8 @@ document.addEventListener('click',async e=>{
   const dc=e.target.closest('[data-dec]');
   if(dc){const C=ciblesPhotos();
     decoupeIdx=Math.max(0,Math.min(C.length-1,decoupeIdx+ +dc.dataset.dec));rendre();return;}
-  const cb=e.target.closest('[data-cible]');
-  if(cb){decoupeIdx=+cb.dataset.cible;rendre();return;}
+  const cb=e.target.closest('[data-cibimg]');
+  if(cb){decoupeIdx=+cb.dataset.cibimg;rendre();return;}
 
   /* Réglages */
   if(e.target.id==='regler-heure'){pousser();vue='reglages';rendre();return;}
@@ -3756,20 +4071,43 @@ document.addEventListener('click',async e=>{
 Donne UNIQUEMENT un tableau JSON des ingrédients, format [{"n":"nom français de l'ingrédient","q":quantité}].
 Utilise si possible ces noms exacts : ${tousNoms().slice(0,120).join(', ')}.
 Si tu n'es pas sûr, donne quand même ta meilleure estimation.`,600);
-      if(Array.isArray(a))S.ing[r.en]=a.filter(x=>x&&x.n).map(x=>({n:String(x.n),q:Math.max(1,+x.q||1)}));}
+      if(Array.isArray(a)){if(!S.compo)S.compo={};S.compo['rec:'+r.en]=a.filter(x=>x&&x.n).map(x=>({n:String(x.n),q:Math.max(1,+x.q||1)}));}}
     catch(err){alert(ERREUR);}
     save();rendre();return;}
   if(e.target.id==='fill-ing'){await remplirIngredients(e.target);return;}
 
+  /* Mes animaux */
+  if(e.target.id==='add-bete'){mesBetes().push(beteVierge());save();rendre();
+    setTimeout(()=>{const c=document.querySelectorAll('.bete');
+      if(c.length)c[c.length-1].scrollIntoView({behavior:'smooth',block:'center'});},60);return;}
+  const bt=e.target.closest('[data-bt]');
+  if(bt){const b=mesBetes()[+bt.dataset.bt];if(b){b[bt.dataset.k]=!b[bt.dataset.k];save();rendre();}return;}
+  const bact=e.target.closest('[data-bact]');
+  if(bact){const b=mesBetes()[+bact.dataset.bact];if(!b)return;
+    if(bact.dataset.k==='caresse')b.caresse=Date.now();
+    else{b.nourri=+jourPalia();b.nourriT=Date.now();}
+    save();rendre();return;}
+  const bsup=e.target.closest('[data-bsup]');
+  if(bsup){const i=+bsup.dataset.bsup,b=mesBetes()[i];if(!b)return;
+    if(!confirm('Retirer '+(b.nom||b.esp)+' de ta liste ?'))return;
+    const copie=JSON.parse(JSON.stringify(b));mesBetes().splice(i,1);save();rendre();
+    montrerToast('Animal retiré',()=>{mesBetes().splice(i,0,copie);save();});return;}
+  const btp=e.target.closest('[data-btrplus]');
+  if(btp){const b=mesBetes()[+btp.dataset.btrplus];if(b){b.traits=(b.traits||[]).concat(['']);save();rendre();}return;}
+  const btx=e.target.closest('[data-btrx]');
+  if(btx){const b=mesBetes()[+btx.dataset.btrx];
+    if(b&&b.traits){b.traits.splice(+btx.dataset.j,1);save();rendre();}return;}
+
   /* Élevage */
   if(e.target.closest('[data-fermer-an]')){selAn=null;rendre();return;}
   const anf=e.target.closest('[data-an-f]');
-  if(anf&&!e.target.closest('[data-jai],[data-ra],[data-caresse],[data-nourri],[data-photo]')){
+  if(anf&&!e.target.closest('[data-jai],[data-ra],[data-caresse],[data-nourri],[data-photo],[data-photo-del]')){
     pousser();const i=+anf.dataset.anF;selAn=selAn===i?null:i;rendre();window.scrollTo({top:0,behavior:'smooth'});return;}
   const jai=e.target.closest('[data-jai]');
   if(jai){const a=jai.dataset.jai;S.ranch[a].nb=S.ranch[a].nb>0?0:1;save();rendre();return;}
   const ra=e.target.closest('[data-ra]');
-  if(ra){const a=ra.dataset.an;S.ranch[a].nb=Math.max(0,S.ranch[a].nb+ +ra.dataset.ra);save();rendre();return;}
+  if(ra){const a=ra.dataset.anom;if(!S.ranch[a])return;
+    S.ranch[a].nb=Math.max(0,S.ranch[a].nb+ +ra.dataset.ra);save();rendre();return;}
   const car=e.target.closest('[data-caresse]');
   if(car){S.ranch[car.dataset.caresse].caresse=Date.now();save();rendre();return;}
   const nou=e.target.closest('[data-nourri]');
@@ -3865,12 +4203,12 @@ En 6 lignes maximum, sans titres : les endroits précis, la technique pour ne pa
     await bloc(e.target,'#opti-res',`Mon jardin ${S.taille}×${S.taille} : ${plan}.
 Bonus : ${CULTURES.map(c=>c.nom+'→'+bonusDe(c.b).nom).join(', ')}. Les bonus vont seulement en haut/bas/gauche/droite et une plante ne se booste pas elle-même.
 Donne 3 changements précis (quelle case, quelle plante).`);return;}
-
-  /* Encyclopédie */
-});
+}
 document.addEventListener('contextmenu',e=>{const cs=e.target.closest('.case');if(!cs)return;
   e.preventDefault();S.jardin[+cs.dataset.i]=null;save();rendre();});
 document.addEventListener('change',e=>{
+  const bsc=e.target.closest('[data-bs]');
+  if(bsc){const b=mesBetes()[+bsc.dataset.bs];if(b){b[bsc.dataset.k]=e.target.value;save();rendre();}return;}
   if(e.target.id==='ed-n'&&editT){majEdit();return;}
   const an=e.target.closest('[data-auton]');
   if(an){autoRes[+an.dataset.auton].nom=e.target.value;return;}
@@ -3918,6 +4256,14 @@ document.addEventListener('input',e=>{
     const c=$('#rres');if(c){c.focus();c.setSelectionRange(p,p);}return;}
   if(e.target.id==='rr'){rechR=e.target.value;const p=e.target.selectionStart;rendre();
     const c=$('#rr');if(c){c.focus();c.setSelectionRange(p,p);}return;}
+  const bs=e.target.closest('[data-bs]');
+  if(bs){const b=mesBetes()[+bs.dataset.bs];if(b){b[bs.dataset.k]=e.target.value;save();}return;}
+  const btr=e.target.closest('[data-btr]');
+  if(btr){const b=mesBetes()[+btr.dataset.btr];
+    if(b&&b.traits){b.traits[+btr.dataset.j]=e.target.value;save();}return;}
+  const cn=e.target.closest('[data-cn]');
+  if(cn){const k=cn.dataset.cn,j=+cn.dataset.j;
+    if(S.compo[k]&&S.compo[k][j]){S.compo[k][j].n=e.target.value;save();}return;}
   const ign=e.target.closest('[data-ingn]');
   if(ign){const r=lireRec(+ign.dataset.ingn),j=+ign.dataset.j;
     if(S.ing[r.en]&&S.ing[r.en][j]){S.ing[r.en][j].n=e.target.value;save();}return;}
@@ -3929,7 +4275,7 @@ document.addEventListener('keydown',e=>{
 async function remplirIngredients(btn){
   if(occupe)return;occupe=true;btn.disabled=true;
   const noms=tousNoms().slice(0,120).join(', ');
-  const reste=RECETTES.map((r,i)=>r).filter(r=>!S.ing[r[1]]||!S.ing[r[1]].length);
+  const reste=RECETTES.filter(r=>!compo('rec:'+r[1]).length);
   let fait=0;
   for(let k=0;k<reste.length;k+=12){
     const lot=reste.slice(k,k+12);
@@ -3942,7 +4288,7 @@ Réponds UNIQUEMENT par un objet JSON de la forme :
 Utilise si possible ces noms d'ingrédients : ${noms}.
 Donne ta meilleure estimation même en cas de doute.`,3000);
       Object.entries(a||{}).forEach(([k2,v])=>{
-        if(Array.isArray(v))S.ing[k2]=v.filter(x=>x&&x.n).map(x=>({n:String(x.n),q:Math.max(1,+x.q||1)}));});
+        if(Array.isArray(v)){if(!S.compo)S.compo={};S.compo['rec:'+k2]=v.filter(x=>x&&x.n).map(x=>({n:String(x.n),q:Math.max(1,+x.q||1)}));}});
     }catch(e){}
     fait+=lot.length;save();
   }
@@ -4007,20 +4353,6 @@ function estInstallee(){
   const p=new URLSearchParams(location.search).get('onglet');
   if(p&&VUES[p]){vue=p;setTimeout(()=>rendre(),0);}
 })();
-</script>
-  <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .then(registration => {
-        console.log("Service Worker enregistré :", registration.scope);
-      })
-      .catch(error => {
-        console.error("Erreur Service Worker :", error);
-      });
-  });
-}
 </script>
 </body>
 </html>
